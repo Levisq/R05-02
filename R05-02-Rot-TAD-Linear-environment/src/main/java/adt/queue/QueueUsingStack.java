@@ -2,6 +2,8 @@ package adt.queue;
 
 import adt.stack.Stack;
 import adt.stack.StackImpl;
+import adt.stack.StackOverflowException;
+import adt.stack.StackUnderflowException;
 
 public class QueueUsingStack<T> implements Queue<T> {
 
@@ -15,32 +17,78 @@ public class QueueUsingStack<T> implements Queue<T> {
 
 	@Override
 	public void enqueue(T element) throws QueueOverflowException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		if(isFull()) {
+			throw new QueueOverflowException();
+		}
+		try {
+			stack1.push(element);
+			
+		} catch (Exception e) {
+			throw new QueueOverflowException();
+		}
+		
 	}
 
 	@Override
 	public T dequeue() throws QueueUnderflowException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		T aux;
+		if(isEmpty()) {
+			throw new QueueUnderflowException();
+		}
+		try {
+			while(!stack1.isEmpty()) {
+				stack2.push(stack1.pop());
+			}
+			aux = stack2.pop();
+			while(!stack2.isEmpty()) {
+				stack1.push(stack2.pop());
+			}
+			
+		} catch (Exception e) {
+			throw new QueueUnderflowException();
+		}
+		return aux;
 	}
 
 	@Override
 	public T head() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		T aux;
+		while(!stack1.isEmpty()) {
+			try {
+				stack2.push(stack1.pop());
+			} catch (StackOverflowException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (StackUnderflowException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		aux = stack2.top();
+		while(!stack2.isEmpty()) {
+			try {
+				stack1.push(stack2.pop());
+			} catch (StackOverflowException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (StackUnderflowException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return aux;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		return stack1.isEmpty();
 	}
 
 	@Override
 	public boolean isFull() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Not implemented yet!");
+		return stack1.isFull();
 	}
 
 }
+
+		

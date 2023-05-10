@@ -27,11 +27,8 @@ public class QueueImpl<T> implements Queue<T> {
 	}
 
 	private void shiftLeft() {
-		for(int i = 0; i < array.length; i++) {
-			T aux = array[i];
+		for(int i = 0; i < tail; i++) {
 			array[i] = array[i + 1];
-			array[i + 1] = aux;
-			
 		}
 	}
 
@@ -46,12 +43,14 @@ public class QueueImpl<T> implements Queue<T> {
 
 	@Override
 	public T dequeue() throws QueueUnderflowException {
-		if(!this.isEmpty()) {
-			T aux = array[0];
-			array[0] = null;
-			return aux;
+		if(this.isEmpty()) {
+			throw new QueueUnderflowException();
 		}
-		throw new QueueUnderflowException();
+		tail--;
+		T aux = array[0];
+		array[0] = null;
+		shiftLeft();
+		return aux;
 	}
 
 }
